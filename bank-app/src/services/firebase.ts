@@ -3,14 +3,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
-
+      apiKey: "AIzaSyAq-Yxaccz-Ia6o9NSTC4Fm-PM02DbvIt0",
+      authDomain: "otp-verification-cb472.firebaseapp.com",
+      databaseURL: "https://otp-verification-cb472-default-rtdb.firebaseio.com",
+      projectId: "otp-verification-cb472",
+      storageBucket: "otp-verification-cb472.appspot.com",
+      messagingSenderId: "939280162949",
+      appId: "1:939280162949:web:89b969538a7f7f0e54c9ec"
+    };
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
