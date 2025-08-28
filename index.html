@@ -1,145 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Customer Panel</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FirstTrust Bank — Home</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Login Form -->
-  <div id="login-section">
-    <h2>Customer Login</h2>
-    <form id="login-form">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="FirstTrust Bank home">
+      <div class="logo" aria-hidden="true">FT</div>
+      <div class="brand-text">
+        <div class="brand-title">FirstTrust Bank</div>
+        <div class="brand-sub">Secure. Simple. Local.</div>
+      </div>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">Personal</a>
+      <a href="#" class="nav-link">Business</a>
+      <a href="#" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="openLogin" class="btn btn-primary" aria-haspopup="dialog">Log in</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <p class="eyebrow">Welcome to FirstTrust</p>
+        <h1>Banking built around you</h1>
+        <p class="lead">Everyday banking, competitive rates, and dedicated support — open an account or log in to manage yours.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-secondary" href="#">Open an account</a>
+          <a class="btn btn-ghost" href="#">View rates</a>
+        </div>
+      </div>
+
+      <aside class="hero-right card">
+        <h3>Featured rates</h3>
+        <dl class="rates">
+          <div class="rate">
+            <dt>High-Yield Savings</dt>
+            <dd><strong>3.25%</strong> APY</dd>
+          </div>
+          <div class="rate">
+            <dt>12 mo CD</dt>
+            <dd><strong>4.10%</strong> APY</dd>
+          </div>
+        </dl>
+        <a class="btn btn-outline" href="#">View all rates</a>
+      </aside>
+    </section>
+
+    <section class="features">
+      <article class="card">
+        <div class="icon">🏦</div>
+        <h4>Personal Banking</h4>
+        <p>Checking and savings accounts with mobile access and no hidden fees.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">💼</div>
+        <h4>Business Solutions</h4>
+        <p>Accounts, payroll, and merchant services tailored for businesses.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🧾</div>
+        <h4>Loans & Mortgages</h4>
+        <p>Competitive rates and flexible terms with expert guidance.</p>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <div class="footer-left">
+        <strong>FirstTrust Bank</strong>
+        <div class="muted">© <span id="year"></span> FirstTrust Bank. All rights reserved.</div>
+      </div>
+      <div class="footer-right">
+        <div class="muted">Support: (800) 555-0123 — support@firsttrust.example</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Login dialog -->
+  <div id="loginDialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle" hidden>
+    <div class="dialog-panel" role="document">
+      <button class="dialog-close" aria-label="Close login dialog" id="closeLogin">&times;</button>
+      <h2 id="loginTitle">Sign in to FirstTrust</h2>
+
+      <form id="loginForm" novalidate>
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required placeholder="you@example.com">
+        </label>
+
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+        </label>
+
+        <label class="field">
+          <span class="field-label">Sign in as</span>
+          <select id="role" name="role" aria-label="Select role to sign in">
+            <option value="customer" selected>Customer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitLogin">Sign in</button>
+          <button type="button" class="btn btn-link" id="cancelLogin">Cancel</button>
+        </div>
+
+        <p class="muted small">Demo redirects only — this page does not perform server-side authentication. For production, implement secure authentication (TLS, server validation, sessions).</p>
+      </form>
+    </div>
   </div>
 
-  <!-- Customer Panel -->
-  <div id="customer-panel" style="display:none;">
-    <h2>Customer Panel</h2>
-    <button id="check-balance">Check Balance</button>
-    <div>Balance: <span id="balance">-</span></div>
+  <div id="dialogBackdrop" class="backdrop" hidden></div>
 
-    <h3>Transfer Money</h3>
-    <input type="text" id="transferTo" placeholder="Recipient Customer ID" />
-    <input type="number" id="transferAmount" placeholder="Amount" />
-    <button id="transferBtn">Transfer</button>
-
-    <h3>Withdraw Money</h3>
-    <input type="number" id="withdrawAmount" placeholder="Amount" />
-    <button id="withdrawBtn">Withdraw</button>
-
-    <h3>Transaction History</h3>
-    <button id="transactionsBtn">Load Transactions</button>
-    <ul id="transactions"></ul>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDki77xVj3Ocya6qVT_zs1SCGdwlLFfLyc",
-      authDomain: "streamline-finance-ed1il.firebaseapp.com",
-      databaseURL: "https://streamline-finance-ed1il-default-rtdb.firebaseio.com",
-      projectId: "streamline-finance-ed1il",
-      storageBucket: "streamline-finance-ed1il.firebasestorage.app",
-      messagingSenderId: "614139276978",
-      appId: "1:614139276978:web:c96e38818afadb4a02e3ab"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    let token = "";
-
-    // Login handler
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const userCred = await auth.signInWithEmailAndPassword(email, password);
-        token = await userCred.user.getIdToken();
-
-        const res = await fetch("http://localhost:5000/customer/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token })
-        });
-
-        if (res.ok) {
-          document.getElementById("login-section").style.display = "none";
-          document.getElementById("customer-panel").style.display = "block";
-        } else {
-          alert("Login failed");
-        }
-      } catch (err) {
-        alert("Firebase login error: " + err.message);
-      }
-    });
-
-    // Balance check
-    document.getElementById("check-balance").addEventListener("click", async () => {
-      const res = await fetch("http://localhost:5000/customer/balance", {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include"
-      });
-      const data = await res.json();
-      document.getElementById("balance").textContent = data.balance || "Error: " + data.error;
-    });
-
-    // Transfer money
-    document.getElementById("transferBtn").addEventListener("click", async () => {
-      const transferTo = document.getElementById("transferTo").value;
-      const transferAmount = parseFloat(document.getElementById("transferAmount").value);
-
-      const res = await fetch("http://localhost:5000/customer/transfer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ to_customer_id: transferTo, amount: transferAmount })
-      });
-
-      const data = await res.json();
-      alert(data.message || data.error);
-    });
-
-    // Withdraw money
-    document.getElementById("withdrawBtn").addEventListener("click", async () => {
-      const withdrawAmount = parseFloat(document.getElementById("withdrawAmount").value);
-
-      const res = await fetch("http://localhost:5000/customer/withdraw", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ amount: withdrawAmount })
-      });
-
-      const data = await res.json();
-      alert(data.message || data.error);
-    });
-
-    // Load transactions
-    document.getElementById("transactionsBtn").addEventListener("click", async () => {
-      const res = await fetch("http://localhost:5000/customer/transactions", {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include"
-      });
-      const data = await res.json();
-
-      const txList = document.getElementById("transactions");
-      txList.innerHTML = "";
-      (data.transactions || []).forEach(tx => {
-        const li = document.createElement("li");
-        li.textContent = `${tx.timestamp}: ${tx.type} - ${tx.amount} (${tx.details})`;
-        txList.appendChild(li);
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
