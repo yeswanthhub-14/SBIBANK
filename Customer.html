@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #f3f7fa 0%, #e8eaf6 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 32px 28px 22px 28px;
+      box-shadow: 0 6px 32px rgba(74,105,189,0.10);
+      border-radius: 16px;
+    }
+    h2, h3 {
+      color: #1a237e;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    form, .panel-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    input[type="email"], input[type="password"], input[type="number"], input[type="text"] {
+      padding: 10px;
+      border: 1.5px solid #c5cae9;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #3f51b5;
+      outline: none;
+    }
+    button {
+      padding: 10px;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+    button:hover {
+      background: #283593;
+    }
+    .balance {
+      font-size: 1.2rem;
+      color: #1976d2;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    ul {
+      padding-left: 18px;
+    }
+    li {
+      font-size: 0.97rem;
+      margin-bottom: 3px;
+      color: #37474f;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8eaf6;
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDki77xVj3Ocya6qVT_zs1SCGdwlLFfLyc",
+      authDomain: "streamline-finance-ed1il.firebaseapp.com",
+      databaseURL: "https://streamline-finance-ed1il-default-rtdb.firebaseio.com",
+      projectId: "streamline-finance-ed1il",
+      storageBucket: "streamline-finance-ed1il.firebasestorage.app",
+      messagingSenderId: "614139276978",
+      appId: "1:614139276978:web:c96e38818afadb4a02e3ab"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let token = "";
+    let loggedIn = false;
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        token = await userCred.user.getIdToken();
+        const res = await fetch("http://localhost:5000/customer/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        if (res.ok) {
+          loggedIn = true;
+          document.getElementById("login-form").style.display = "none";
+          document.getElementById("customer-panel").style.display = "";
+        } else {
+          alert("Login failed");
+        }
+      } catch (err) {
+        alert("Firebase login error: " + err.message);
+      }
+    }
+
+    async function checkBalance() {
+      const res = await fetch("http://localhost:5000/customer/balance", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      });
+      const data = await res.json();
+      document.getElementById("balance").textContent = data.balance || ("Error: " + data.error);
+    }
+
+    async function transferMoney() {
+      const to_customer_id = document.getElementById("transferTo").value;
+      const amount = parseFloat(document.getElementById("transferAmount").value);
+      const res = await fetch("http://localhost:5000/customer/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ to_customer_id, amount })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+      checkBalance();
+    }
+
+    async function withdrawMoney() {
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
+      const res = await fetch("http://localhost:5000/customer/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ amount })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+      checkBalance();
+    }
+
+    async function getTransactions() {
+      const res = await fetch("http://localhost:5000/customer/transactions", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      });
+      const data = await res.json();
+      const transactions = data.transactions || [];
+      const list = document.getElementById("transactions");
+      list.innerHTML = "";
+      transactions.forEach(tx => {
+        const li = document.createElement("li");
+        li.textContent = `${tx.timestamp}: ${tx.type} - ${tx.amount} (${tx.details})`;
+        list.appendChild(li);
+      });
+    }
+
+    window.handleLogin = handleLogin;
+    window.checkBalance = checkBalance;
+    window.transferMoney = transferMoney;
+    window.withdrawMoney = withdrawMoney;
+    window.getTransactions = getTransactions;
+  </script>
+</head>
+<body>
+  <div class="container">
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <h2>Customer Login</h2>
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <div id="customer-panel" style="display:none;">
+      <h2>Customer Panel</h2>
+      <div class="section panel-controls">
+        <button onclick="checkBalance()">Check Balance</button>
+        <div class="balance">Balance: <span id="balance">-</span></div>
+      </div>
+
+      <div class="section panel-controls">
+        <h3>Transfer Money</h3>
+        <input type="text" id="transferTo" placeholder="Recipient Customer ID" />
+        <input type="number" id="transferAmount" placeholder="Amount" />
+        <button onclick="transferMoney()">Transfer</button>
+      </div>
+
+      <div class="section panel-controls">
+        <h3>Withdraw Money</h3>
+        <input type="number" id="withdrawAmount" placeholder="Amount" />
+        <button onclick="withdrawMoney()">Withdraw</button>
+      </div>
+
+      <div class="section panel-controls">
+        <h3>Transaction History</h3>
+        <button onclick="getTransactions()">Load Transactions</button>
+        <ul id="transactions"></ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
