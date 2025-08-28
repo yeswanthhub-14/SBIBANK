@@ -3,265 +3,231 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FirstTrust Bank — Home</title>
+  <title>FirstTrust Bank</title>
   <style>
-    /* Modern, accessible styles for the bank pages */
-    :root{
-      --bg:#f4f7fb;
-      --card:#ffffff;
-      --brand-1:#0b6a99;
-      --brand-2:#0f8fc4;
-      --accent:#f6a623;
-      --muted:#6b7280;
-      --glass: rgba(255,255,255,0.7);
-      --radius:12px;
-      --shadow: 0 8px 30px rgba(9,30,63,0.08);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color-scheme: light;
+    :root {
+      --bg:#f4f7fb; --card:#fff; --brand:#004080;
+      --brand-2:#0066cc; --text:#333; --muted:#777;
     }
-
-    *{box-sizing:border-box;}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#f8fbfe,var(--bg));-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-    .container{max-width:1150px;margin:0 auto;padding:28px}
-
-    /* Header */
-    .site-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 28px;position:sticky;top:0;backdrop-filter: blur(6px);}
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-    .logo{width:52px;height:52px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;
-      background:linear-gradient(135deg,var(--brand-1),var(--brand-2));box-shadow:0 8px 26px rgba(15,107,153,0.12)}
-    .brand-title{font-weight:800}
-    .brand-sub{font-size:13px;color:var(--muted);margin-top:2px}
-
-    /* Nav */
-    .main-nav{display:flex;gap:12px}
-    .nav-link{color:var(--muted);text-decoration:none;padding:8px;border-radius:10px;font-weight:600}
-    .nav-link:hover{color:var(--brand-1)}
-    .header-actions{display:flex;align-items:center;gap:10px}
-
-    /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer;text-decoration:none}
-    .btn-primary{background:linear-gradient(90deg,var(--brand-1),var(--brand-2));color:white;box-shadow:var(--shadow)}
-    .btn-secondary{background:transparent;border:1px solid rgba(11,74,111,0.08);color:var(--brand-1)}
-    .btn-ghost{background:transparent;color:var(--brand-1);border:1px dashed rgba(11,74,111,0.06)}
-    .btn-outline{display:inline-block;padding:8px 10px;border-radius:10px;border:1px solid rgba(11,74,111,0.06);background:transparent}
-
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start;padding:16px 0}
-    .hero-left h1{font-size:28px;margin:8px 0}
-    .eyebrow{color:var(--brand-1);font-weight:700;font-size:13px}
-    .lead{color:#334155;margin:8px 0 18px}
-    .hero-ctas{display:flex;gap:12px}
-
-    /* Cards */
-    .card{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(11,74,111,0.04)}
-    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
-    .features .card p{color:var(--muted)}
-    .icon{font-size:28px}
-
-    /* Rates */
-    .rates{margin:10px 0 14px}
-    .rate{display:flex;justify-content:space-between;padding:8px 0;border-top:1px dashed rgba(11,74,111,0.05)}
-    .rate dt{font-weight:700}
-
-    /* Footer */
-    .site-footer{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:18px;border-top:1px solid rgba(11,74,111,0.04)}
-    .muted{color:var(--muted)}
-    .small{font-size:13px}
-
-    /* Dialog */
-    .dialog{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
-    .backdrop{position:fixed;inset:0;background:rgba(7,18,33,0.45);z-index:40}
-    .dialog-panel{width:100%;max-width:420px;background:linear-gradient(180deg,var(--card),#fbfdff);padding:20px;border-radius:14px;box-shadow:0 18px 60px rgba(8,20,40,0.32);position:relative;border:1px solid rgba(11,74,111,0.04)}
-    .dialog-close{position:absolute;right:10px;top:10px;background:transparent;border:0;font-size:20px;color:var(--muted);cursor:pointer}
-    .field{display:block;margin-bottom:12px}
-    .field-label{display:block;margin-bottom:6px;font-weight:700}
-    .field input, .field select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(11,74,111,0.08);background:transparent;font-size:15px}
-    .form-actions{display:flex;gap:10px;align-items:center;margin-top:8px}
-    .btn-link{background:transparent;border:0;color:var(--brand-1);cursor:pointer;padding:8px}
-
-    /* Responsive */
-    @media (max-width:980px){
-      .hero{grid-template-columns:1fr;gap:18px}
-      .main-nav{display:none}
-      .features{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width:560px){
-      .features{grid-template-columns:1fr}
-      .dialog-panel{margin:0 10px}
-    }
-
-    /* Focus states */
-    a:focus, button:focus, input:focus, select:focus{outline:3px solid rgba(15,107,153,0.14);outline-offset:3px}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}
+    body{background:var(--bg);color:var(--text);}
+    header{background:var(--brand);color:#fff;padding:1rem;text-align:center;}
+    nav{margin-top:.5rem;}
+    nav button{margin:0 .5rem;padding:.5rem 1rem;border:0;border-radius:6px;background:var(--brand-2);color:#fff;cursor:pointer;}
+    nav button.active{background:#fff;color:var(--brand);}
+    main{padding:1rem;}
+    .card{background:var(--card);padding:1rem;margin:1rem auto;max-width:600px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    h2{margin-bottom:1rem;color:var(--brand);}
+    label{display:block;margin:.5rem 0 .2rem;}
+    input,select{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:6px;}
+    button.action{margin-top:1rem;padding:.5rem 1rem;border:0;border-radius:6px;background:var(--brand-2);color:#fff;cursor:pointer;}
+    table{width:100%;border-collapse:collapse;margin-top:1rem;}
+    table,th,td{border:1px solid #ccc;}
+    th,td{padding:.5rem;text-align:left;}
+    .hidden{display:none;}
+    footer{text-align:center;padding:1rem;font-size:.9rem;color:var(--muted);}
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="#">
-      <div class="logo">FT</div>
-      <div class="brand-text">
-        <div class="brand-title">FirstTrust Bank</div>
-        <div class="brand-sub">Secure. Simple. Local.</div>
-      </div>
-    </a>
-
-    <nav class="main-nav">
-      <a href="#" class="nav-link">Home</a>
-      <a href="#" class="nav-link">Personal</a>
-      <a href="#" class="nav-link">Business</a>
-      <a href="#" class="nav-link">Contact</a>
+  <header>
+    <h1>FirstTrust Bank</h1>
+    <nav>
+      <button id="homeTab" class="active">Home</button>
+      <button id="adminTab">Admin Panel</button>
+      <button id="customerTab">Customer Panel</button>
     </nav>
-
-    <div class="header-actions">
-      <button id="openLogin" class="btn btn-primary">Log in</button>
-    </div>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-left">
-        <p class="eyebrow">Welcome to FirstTrust</p>
-        <h1>Banking built around you</h1>
-        <p class="lead">Everyday banking, competitive rates, and dedicated support — open an account or log in to manage yours.</p>
-        <div class="hero-ctas">
-          <a class="btn btn-secondary" href="#">Open an account</a>
-          <a class="btn btn-ghost" href="#">View rates</a>
-        </div>
-      </div>
-
-      <aside class="hero-right card">
-        <h3>Featured rates</h3>
-        <dl class="rates">
-          <div class="rate">
-            <dt>High-Yield Savings</dt>
-            <dd><strong>3.25%</strong> APY</dd>
-          </div>
-          <div class="rate">
-            <dt>12 mo CD</dt>
-            <dd><strong>4.10%</strong> APY</dd>
-          </div>
-        </dl>
-        <a class="btn btn-outline" href="#">View all rates</a>
-      </aside>
+  <main>
+    <!-- HOME -->
+    <section id="homeSection" class="card">
+      <h2>Welcome to FirstTrust Bank</h2>
+      <p>Secure online banking with real-time account management.</p>
     </section>
 
-    <section class="features">
-      <article class="card">
-        <div class="icon">🏦</div>
-        <h4>Personal Banking</h4>
-        <p>Checking and savings accounts with mobile access and no hidden fees.</p>
-      </article>
-
-      <article class="card">
-        <div class="icon">💼</div>
-        <h4>Business Solutions</h4>
-        <p>Accounts, payroll, and merchant services tailored for businesses.</p>
-      </article>
-
-      <article class="card">
-        <div class="icon">🧾</div>
-        <h4>Loans & Mortgages</h4>
-        <p>Competitive rates and flexible terms with expert guidance.</p>
-      </article>
+    <!-- ADMIN PANEL -->
+    <section id="adminSection" class="hidden">
+      <div class="card">
+        <h2>Admin Dashboard</h2>
+        <label>Customer Email</label><input id="custEmail" type="email"/>
+        <label>Password</label><input id="custPass" type="password"/>
+        <label>Initial Balance</label><input id="custBalance" type="number"/>
+        <button class="action" onclick="createCustomer()">Create Account</button>
+      </div>
+      <div class="card">
+        <h2>Admin Actions</h2>
+        <label>Account Number</label><input id="adminAcc" />
+        <label>Amount</label><input id="adminAmt" type="number"/>
+        <button class="action" onclick="deposit()">Deposit</button>
+        <button class="action" onclick="withdraw()">Withdraw</button>
+      </div>
+      <div class="card">
+        <h2>All Transactions</h2>
+        <table id="adminTxns"><thead><tr><th>Acc</th><th>Type</th><th>Amt</th><th>Date</th></tr></thead><tbody></tbody></table>
+      </div>
     </section>
 
-    <footer class="site-footer">
-      <div class="footer-left">
-        <strong>FirstTrust Bank</strong>
-        <div class="muted">© <span id="year"></span> FirstTrust Bank. All rights reserved.</div>
+    <!-- CUSTOMER PANEL -->
+    <section id="customerSection" class="hidden">
+      <div class="card" id="loginCard">
+        <h2>Customer Login</h2>
+        <label>Email</label><input id="loginEmail" type="email"/>
+        <label>Password</label><input id="loginPass" type="password"/>
+        <button class="action" onclick="login()">Login</button>
       </div>
-      <div class="footer-right">
-        <div class="muted">Support: (800) 555-0123 — support@firsttrust.example</div>
+      <div class="card hidden" id="customerCard">
+        <h2>My Account</h2>
+        <p><b>Account No:</b> <span id="custAccNo"></span></p>
+        <p><b>Balance:</b> ₹<span id="custBalanceDisplay">0</span></p>
+        <button class="action" onclick="logout()">Logout</button>
       </div>
-    </footer>
+      <div class="card hidden" id="custActions">
+        <h2>Actions</h2>
+        <label>Amount</label><input id="custAmt" type="number"/>
+        <button class="action" onclick="custDeposit()">Deposit</button>
+        <button class="action" onclick="custWithdraw()">Withdraw</button>
+      </div>
+      <div class="card hidden" id="custTxnCard">
+        <h2>My Transactions</h2>
+        <table id="custTxns"><thead><tr><th>Type</th><th>Amt</th><th>Date</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
   </main>
 
-  <!-- Login dialog -->
-  <div id="loginDialog" class="dialog" hidden>
-    <div class="dialog-panel">
-      <button class="dialog-close" id="closeLogin">&times;</button>
-      <h2 id="loginTitle">Sign in to FirstTrust</h2>
+  <footer>&copy; <span id="year"></span> FirstTrust Bank</footer>
 
-      <form id="loginForm" novalidate>
-        <label class="field">
-          <span class="field-label">Email</span>
-          <input id="email" type="email" required placeholder="you@example.com">
-        </label>
-
-        <label class="field">
-          <span class="field-label">Password</span>
-          <input id="password" type="password" required placeholder="••••••••">
-        </label>
-
-        <label class="field">
-          <span class="field-label">Sign in as</span>
-          <select id="role">
-            <option value="customer" selected>Customer</option>
-            <option value="admin">Admin</option>
-          </select>
-        </label>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Sign in</button>
-          <button type="button" class="btn btn-link" id="cancelLogin">Cancel</button>
-        </div>
-
-        <p class="muted small">Demo only — no real authentication. In production, add secure server login.</p>
-      </form>
-    </div>
-  </div>
-
-  <div id="dialogBackdrop" class="backdrop" hidden></div>
-
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
   <script>
+    // === CONFIG ===
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "123456",
+      appId: "1:123456:web:abcdef"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    const openLogin = document.getElementById('openLogin');
-    const loginDialog = document.getElementById('loginDialog');
-    const backdrop = document.getElementById('dialogBackdrop');
-    const closeLogin = document.getElementById('closeLogin');
-    const cancelLogin = document.getElementById('cancelLogin');
-    const loginForm = document.getElementById('loginForm');
-
-    function showDialog(){
-      loginDialog.hidden = false;
-      backdrop.hidden = false;
-      setTimeout(() => document.getElementById('email').focus(), 50);
-      document.body.style.overflow = 'hidden';
+    // Tab switching
+    function show(section){
+      document.getElementById("homeSection").classList.add("hidden");
+      document.getElementById("adminSection").classList.add("hidden");
+      document.getElementById("customerSection").classList.add("hidden");
+      section.classList.remove("hidden");
+      document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
     }
-    function hideDialog(){
-      loginDialog.hidden = true;
-      backdrop.hidden = true;
-      document.body.style.overflow = '';
-      openLogin.focus();
+    homeTab.onclick=()=>{show(homeSection);homeTab.classList.add("active")};
+    adminTab.onclick=()=>{show(adminSection);adminTab.classList.add("active")};
+    customerTab.onclick=()=>{show(customerSection);customerTab.classList.add("active")};
+
+    // === ADMIN FUNCTIONS ===
+    function createCustomer(){
+      let email=custEmail.value, pass=custPass.value, bal=+custBalance.value;
+      auth.createUserWithEmailAndPassword(email, pass)
+      .then(cred=>{
+        let uid=cred.user.uid;
+        let acc="AC"+Math.floor(Math.random()*1000000);
+        db.ref("customers/"+uid).set({email,acc,balance:bal});
+        alert("Account created: "+acc);
+      })
+      .catch(e=>alert(e.message));
+    }
+    function deposit(){
+      let acc=adminAcc.value, amt=+adminAmt.value;
+      db.ref("customers").once("value",snap=>{
+        snap.forEach(c=>{
+          if(c.val().acc===acc){
+            let bal=c.val().balance+amt;
+            db.ref("customers/"+c.key+"/balance").set(bal);
+            let t={type:"Deposit",amt,date:new Date().toLocaleString()};
+            db.ref("customers/"+c.key+"/txns").push(t);
+            addAdminTxn(acc,t);
+          }
+        });
+      });
+    }
+    function withdraw(){
+      let acc=adminAcc.value, amt=+adminAmt.value;
+      db.ref("customers").once("value",snap=>{
+        snap.forEach(c=>{
+          if(c.val().acc===acc){
+            let bal=c.val().balance-amt;
+            if(bal<0){alert("Insufficient");return;}
+            db.ref("customers/"+c.key+"/balance").set(bal);
+            let t={type:"Withdraw",amt,date:new Date().toLocaleString()};
+            db.ref("customers/"+c.key+"/txns").push(t);
+            addAdminTxn(acc,t);
+          }
+        });
+      });
+    }
+    function addAdminTxn(acc,t){
+      let row=`<tr><td>${acc}</td><td>${t.type}</td><td>${t.amt}</td><td>${t.date}</td></tr>`;
+      adminTxns.querySelector("tbody").insertAdjacentHTML("afterbegin",row);
     }
 
-    openLogin.addEventListener('click', showDialog);
-    closeLogin.addEventListener('click', hideDialog);
-    cancelLogin.addEventListener('click', hideDialog);
-    backdrop.addEventListener('click', hideDialog);
-
-    document.addEventListener('keydown', (ev) => {
-      if(ev.key === 'Escape' && !loginDialog.hidden){
-        hideDialog();
-      }
-    });
-
-    loginForm.addEventListener('submit', function(ev){
-      ev.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const passwd = document.getElementById('password').value;
-      const role = document.getElementById('role').value;
-
-      if(!email || !passwd){
-        alert('Please fill email and password.');
-        return;
-      }
-      if(role === 'admin'){
-        window.location.href = 'admin.html';
-      } else {
-        window.location.href = 'customer.html';
-      }
-    });
+    // === CUSTOMER FUNCTIONS ===
+    let currentUser=null;
+    function login(){
+      auth.signInWithEmailAndPassword(loginEmail.value, loginPass.value)
+      .then(res=>{
+        currentUser=res.user;
+        loadCustomer();
+      }).catch(e=>alert(e.message));
+    }
+    function logout(){
+      auth.signOut().then(()=>{
+        currentUser=null;
+        loginCard.classList.remove("hidden");
+        customerCard.classList.add("hidden");
+        custActions.classList.add("hidden");
+        custTxnCard.classList.add("hidden");
+      });
+    }
+    function loadCustomer(){
+      loginCard.classList.add("hidden");
+      customerCard.classList.remove("hidden");
+      custActions.classList.remove("hidden");
+      custTxnCard.classList.remove("hidden");
+      db.ref("customers/"+currentUser.uid).on("value",snap=>{
+        let d=snap.val();
+        custAccNo.textContent=d.acc;
+        custBalanceDisplay.textContent=d.balance;
+      });
+      db.ref("customers/"+currentUser.uid+"/txns").on("child_added",s=>{
+        let t=s.val();
+        let row=`<tr><td>${t.type}</td><td>${t.amt}</td><td>${t.date}</td></tr>`;
+        custTxns.querySelector("tbody").insertAdjacentHTML("afterbegin",row);
+      });
+    }
+    function custDeposit(){
+      let amt=+custAmt.value;
+      db.ref("customers/"+currentUser.uid).once("value",snap=>{
+        let bal=snap.val().balance+amt;
+        db.ref("customers/"+currentUser.uid+"/balance").set(bal);
+        let t={type:"Deposit",amt,date:new Date().toLocaleString()};
+        db.ref("customers/"+currentUser.uid+"/txns").push(t);
+      });
+    }
+    function custWithdraw(){
+      let amt=+custAmt.value;
+      db.ref("customers/"+currentUser.uid).once("value",snap=>{
+        let bal=snap.val().balance-amt;
+        if(bal<0){alert("Insufficient");return;}
+        db.ref("customers/"+currentUser.uid+"/balance").set(bal);
+        let t={type:"Withdraw",amt,date:new Date().toLocaleString()};
+        db.ref("customers/"+currentUser.uid+"/txns").push(t);
+      });
+    }
   </script>
 </body>
 </html>
