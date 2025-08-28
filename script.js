@@ -56,9 +56,9 @@ loginForm.addEventListener('submit', function(ev){
   // In production, perform server-side authentication and protect admin routes on the server.
   if(role === 'admin'){
     // redirect to admin dashboard
-    window.location.href = 'admin.html';
+    window.location.href = 'indexa.html';
   } else {
     // redirect to customer dashboard
-    window.location.href = 'customer.html';
+    window.location.href = 'indexc.html';
   }
 });
