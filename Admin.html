@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #f3f7fa 0%, #e8eaf6 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 36px 30px 28px 30px;
+      box-shadow: 0 6px 32px rgba(74,105,189,0.10);
+      border-radius: 16px;
+    }
+    h2, h3 {
+      color: #1a237e;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .panel-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e8eaf6;
+    }
+    input[type="number"], input[type="text"] {
+      padding: 10px;
+      border: 1.5px solid #c5cae9;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #3f51b5;
+      outline: none;
+    }
+    button {
+      padding: 10px;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+    button:hover {
+      background: #283593;
+    }
+    .balance {
+      font-size: 1.2rem;
+      color: #1976d2;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    ul {
+      padding-left: 18px;
+    }
+    li {
+      font-size: 0.97rem;
+      margin-bottom: 3px;
+      color: #37474f;
+    }
+    .label {
+      font-size: 0.98rem;
+      color: #283593;
+      margin-bottom: 2px;
+      font-weight: 500;
+    }
+  </style>
+  <script>
+    async function createAccount() {
+      const customer_id = document.getElementById("customerId").value;
+      const initial_balance = parseFloat(document.getElementById("initialBalance").value);
+      const res = await fetch("http://localhost:5000/admin/account/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customer_id, initial_balance })
+      });
+      const data = await res.json();
+      document.getElementById("newAccountId").textContent = data.account_id || "Error: " + data.error;
+      alert(data.message || data.error);
+    }
+
+    async function checkBalance() {
+      const account_id = document.getElementById("accountId").value;
+      const res = await fetch(`http://localhost:5000/admin/account/balance/${account_id}`);
+      const data = await res.json();
+      document.getElementById("accountBalance").textContent = data.balance || "Error: " + data.error;
+    }
+
+    async function transferMoney() {
+      const from_account_id = document.getElementById("transferFrom").value;
+      const to_account_id = document.getElementById("transferTo").value;
+      const amount = parseFloat(document.getElementById("transferAmount").value);
+      const res = await fetch("http://localhost:5000/admin/account/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ from_account_id, to_account_id, amount })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+      checkBalance();
+    }
+
+    async function withdrawMoney() {
+      const account_id = document.getElementById("withdrawAccount").value;
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
+      const res = await fetch("http://localhost:5000/admin/account/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ account_id, amount })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+      checkBalance();
+    }
+
+    async function getTransactions() {
+      const account_id = document.getElementById("transactionsAccountId").value;
+      const res = await fetch(`http://localhost:5000/admin/account/transactions/${account_id}`);
+      const data = await res.json();
+      const transactions = data.transactions || [];
+      const list = document.getElementById("transactions");
+      list.innerHTML = "";
+      transactions.forEach(tx => {
+        const li = document.createElement("li");
+        li.textContent = `${tx.timestamp}: ${tx.type} - ${tx.amount} (${tx.details})`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Panel</h2>
+    <!-- Account Creation -->
+    <div class="panel-controls">
+      <h3>Create Account</h3>
+      <input type="text" id="customerId" placeholder="Customer ID" />
+      <input type="number" id="initialBalance" placeholder="Initial Balance" />
+      <button onclick="createAccount()">Create Account</button>
+      <div class="label">New Account ID: <span id="newAccountId"></span></div>
+    </div>
+
+    <!-- Balance Check -->
+    <div class="panel-controls">
+      <h3>Check Account Balance</h3>
+      <input type="text" id="accountId" placeholder="Account ID" />
+      <button onclick="checkBalance()">Check Balance</button>
+      <div class="balance">Balance: <span id="accountBalance">-</span></div>
+    </div>
+
+    <!-- Transfer Money -->
+    <div class="panel-controls">
+      <h3>Transfer Money</h3>
+      <input type="text" id="transferFrom" placeholder="From Account ID" />
+      <input type="text" id="transferTo" placeholder="To Account ID" />
+      <input type="number" id="transferAmount" placeholder="Amount" />
+      <button onclick="transferMoney()">Transfer</button>
+    </div>
+
+    <!-- Withdraw Money -->
+    <div class="panel-controls">
+      <h3>Withdraw Money</h3>
+      <input type="text" id="withdrawAccount" placeholder="Account ID" />
+      <input type="number" id="withdrawAmount" placeholder="Amount" />
+      <button onclick="withdrawMoney()">Withdraw</button>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="panel-controls">
+      <h3>Transaction History</h3>
+      <input type="text" id="transactionsAccountId" placeholder="Account ID" />
+      <button onclick="getTransactions()">Load Transactions</button>
+      <ul id="transactions"></ul>
+    </div>
+  </div>
+</body>
+  </html>
