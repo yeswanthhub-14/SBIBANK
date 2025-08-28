@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Panel</title>
+</head>
+<body>
+  <!-- Login Form -->
+  <div id="login-section">
+    <h2>Customer Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- Customer Panel -->
+  <div id="customer-panel" style="display:none;">
+    <h2>Customer Panel</h2>
+    <button id="check-balance">Check Balance</button>
+    <div>Balance: <span id="balance">-</span></div>
+
+    <h3>Transfer Money</h3>
+    <input type="text" id="transferTo" placeholder="Recipient Customer ID" />
+    <input type="number" id="transferAmount" placeholder="Amount" />
+    <button id="transferBtn">Transfer</button>
+
+    <h3>Withdraw Money</h3>
+    <input type="number" id="withdrawAmount" placeholder="Amount" />
+    <button id="withdrawBtn">Withdraw</button>
+
+    <h3>Transaction History</h3>
+    <button id="transactionsBtn">Load Transactions</button>
+    <ul id="transactions"></ul>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDki77xVj3Ocya6qVT_zs1SCGdwlLFfLyc",
+      authDomain: "streamline-finance-ed1il.firebaseapp.com",
+      databaseURL: "https://streamline-finance-ed1il-default-rtdb.firebaseio.com",
+      projectId: "streamline-finance-ed1il",
+      storageBucket: "streamline-finance-ed1il.firebasestorage.app",
+      messagingSenderId: "614139276978",
+      appId: "1:614139276978:web:c96e38818afadb4a02e3ab"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    let token = "";
+
+    // Login handler
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        token = await userCred.user.getIdToken();
+
+        const res = await fetch("http://localhost:5000/customer/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        if (res.ok) {
+          document.getElementById("login-section").style.display = "none";
+          document.getElementById("customer-panel").style.display = "block";
+        } else {
+          alert("Login failed");
+        }
+      } catch (err) {
+        alert("Firebase login error: " + err.message);
+      }
+    });
+
+    // Balance check
+    document.getElementById("check-balance").addEventListener("click", async () => {
+      const res = await fetch("http://localhost:5000/customer/balance", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      });
+      const data = await res.json();
+      document.getElementById("balance").textContent = data.balance || "Error: " + data.error;
+    });
+
+    // Transfer money
+    document.getElementById("transferBtn").addEventListener("click", async () => {
+      const transferTo = document.getElementById("transferTo").value;
+      const transferAmount = parseFloat(document.getElementById("transferAmount").value);
+
+      const res = await fetch("http://localhost:5000/customer/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ to_customer_id: transferTo, amount: transferAmount })
+      });
+
+      const data = await res.json();
+      alert(data.message || data.error);
+    });
+
+    // Withdraw money
+    document.getElementById("withdrawBtn").addEventListener("click", async () => {
+      const withdrawAmount = parseFloat(document.getElementById("withdrawAmount").value);
+
+      const res = await fetch("http://localhost:5000/customer/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ amount: withdrawAmount })
+      });
+
+      const data = await res.json();
+      alert(data.message || data.error);
+    });
+
+    // Load transactions
+    document.getElementById("transactionsBtn").addEventListener("click", async () => {
+      const res = await fetch("http://localhost:5000/customer/transactions", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      });
+      const data = await res.json();
+
+      const txList = document.getElementById("transactions");
+      txList.innerHTML = "";
+      (data.transactions || []).forEach(tx => {
+        const li = document.createElement("li");
+        li.textContent = `${tx.timestamp}: ${tx.type} - ${tx.amount} (${tx.details})`;
+        txList.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
